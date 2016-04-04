@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>binaryClock v1.0</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./jquery.mobile-1.0.1.min.css" />
+        <script type="text/javascript" src="./jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="./jquery.mobile-1.0.1.min.js"></script>
+    </head>
+<body style="overflow: hidden;">
+
+<script type="text/javascript">
+	/** est on le matin */
+	var am = true;
+	/** l'heure sous format binaire */
+	var hour = 0;
+	/** les minutes sous format binaire */
+	var minute = 0;
+	/** le mois sous format binaire */
+	var month = 0;
+	/** le jour sous format binaire */
+	var day = 0;
+
+	/**
+	 * turnOnLed - allume une led
+	 */
+	 function turnOnLed(id) {
+		 document.getElementById(id+"_on").style.display = "inline";
+		 document.getElementById(id+"_off").style.display = "none";
+	 }
+
+	/**
+	 * turnOffLed - éteind une led
+	 */
+	 function turnOffLed(id) {
+		 document.getElementById(id+"_on").style.display = "none";
+		 document.getElementById(id+"_off").style.display = "inline";
+	 }
+	  
+	/**
+	 * repaintTime - actualise l'affichage de la date et heure
+	 */
+	 function repaintTime() {
+		// AM / PM
+		if (am) {
+			turnOnLed("h_am");
+			turnOffLed("h_pm");
+		}
+		else {
+			turnOffLed("h_am");
+			turnOnLed("h_pm");
+		}
+		// L'heure
+		if (hour.substr(0,1) == "1") turnOnLed("h_8");
+		else turnOffLed("h_8");
+		if (hour.substr(1,1) == "1") turnOnLed("h_4");
+		else turnOffLed("h_4");
+		if (hour.substr(2,1) == "1") turnOnLed("h_2");
+		else turnOffLed("h_2");
+		if (hour.substr(3,1) == "1") turnOnLed("h_1");
+		else turnOffLed("h_1");
+		// Les minutes
+		if (minute.substr(0,1) == "1") turnOnLed("mn_32");
+		else turnOffLed("mn_32");
+		if (minute.substr(1,1) == "1") turnOnLed("mn_16");
+		else turnOffLed("mn_16");
+		if (minute.substr(2,1) == "1") turnOnLed("mn_8");
+		else turnOffLed("mn_8");
+		if (minute.substr(3,1) == "1") turnOnLed("mn_4");
+		else turnOffLed("mn_4");
+		if (minute.substr(4,1) == "1") turnOnLed("mn_2");
+		else turnOffLed("mn_2");
+		if (minute.substr(5,1) == "1") turnOnLed("mn_1");
+		else turnOffLed("mn_1");
+		// Le mois
+		if (month.substr(0,1) == "1") turnOnLed("m_8");
+		else turnOffLed("m_8");
+		if (month.substr(1,1) == "1") turnOnLed("m_4");
+		else turnOffLed("m_4");
+		if (month.substr(2,1) == "1") turnOnLed("m_2");
+		else turnOffLed("m_2");
+		if (month.substr(3,1) == "1") turnOnLed("m_1");
+		else turnOffLed("m_1");
+		// Le jour
+		if (day.substr(0,1) == "1") turnOnLed("d_32");
+		else turnOffLed("d_32");
+		if (day.substr(1,1) == "1") turnOnLed("d_16");
+		else turnOffLed("d_16");
+		if (day.substr(2,1) == "1") turnOnLed("d_8");
+		else turnOffLed("d_8");
+		if (day.substr(3,1) == "1") turnOnLed("d_4");
+		else turnOffLed("d_4");
+		if (day.substr(4,1) == "1") turnOnLed("d_2");
+		else turnOffLed("d_2");
+		if (day.substr(5,1) == "1") turnOnLed("d_1");
+		else turnOffLed("d_1");
+	}
+	
+	/**
+	 * updateTime - fonction de mise à jour de la date et heure
+	 */
+	function updateTime() {
+		// Objet date
+		date = new Date();
+		// L'heure
+		hh = toAMPM(date.getHours());
+	    hour = format(hh.toString(2), 4);
+	    // Les minutes
+		mn = date.getMinutes();
+		minute = format(mn.toString(2), 6);
+		// Le jour 
+		dd = date.getDate();
+		day = format(dd.toString(2), 6);
+		// Le mois
+		mm = date.getMonth()+1;
+		month = format(mm.toString(2), 4);
+		// on repaint
+		repaintTime();
+	}
+
+	/**
+	 * toAMPM - tranforme une heure au format 24h vers le format 12h
+	 *          positionne également la notion de AM / PM
+	 */
+	function toAMPM(time) {
+		h = time;
+		if (h > 11) {
+			am = false;
+			h = h - 12;
+		}
+		if (h == 0) h = 12;
+		return h; 
+	}
+	
+	/**
+	 * format - formate une série binaire en ajoutant des 0 devant 
+	 *          si celle-ci n'est pas assez grande
+	 */
+	function format(str, size) {
+		tstr = str;
+		while (tstr.length < size) {
+			tstr = "0" + tstr;
+		}
+		return tstr;
+	}
+	
+</script> 
+
+<!-- La Première Page : L'HEURE -->
+<div data-role="page" data-theme="a" id="heure" style="position: fixed; width:100%; height: 100%; top: 0; bottom: 0;">
+	<!-- header -->
+    <div data-role="header">
+		<!-- /navbar -->
+		<div data-role="navbar">
+			<ul>
+				<li><a data-theme="b" href="#heure">Time</a></li>
+				<li><a href="#date">Date</a></li>
+				<li><a href="#about">About</a></li>
+			</ul>
+		</div>        
+    </div>
+	<!-- page -->
+    <div data-role="content" >
+		<!-- page sur deux colonnes -->
+		<div class="ui-grid-a">
+			<!-- colonne 1 : les heures -->
+			<div class="ui-block-a">
+				<div style="margin-left: 10%">
+				<div>
+					<img id="h_am_on" src="images/ampm_on.png" alt="[*]" title="AM" style="display: inline;" /> 
+					<img id="h_am_off" src="images/led_off.png" alt="[ ]" title="AM" style="display: none;" /> 
+					<strong>AM</strong>
+				</div>
+				<div>
+					<img id="h_pm_off" src="images/led_off.png" alt="[ ]" title="PM" style="display: inline;" />
+					<img id="h_pm_on" src="images/ampm_on.png" alt="[*]" title="PM" style="display: none;" /> 
+					<strong>PM</strong>
+				</div>
+				<div>&nbsp;</div>
+				<div>
+					<img id="h_8_on" src="images/led_on.png" alt="[*]" title="8" style="display: inline;" />
+					<img id="h_8_off" src="images/led_off.png" alt="[ ]" title="8" style="display: none;" /> 
+					<strong>8</strong>
+				</div>
+				<div>
+					<img id="h_4_on" src="images/led_on.png" alt="[*]" title="4" style="display: inline;" />
+					<img id="h_4_off" src="images/led_off.png" alt="[ ]" title="4" style="display: none;" /> 
+					<strong>4</strong>
+				</div>
+				<div>
+					<img id="h_2_on" src="images/led_on.png" alt="[*]" title="2" style="display: inline;" /> 
+					<img id="h_2_off" src="images/led_off.png" alt="[ ]" title="2" style="display: none;" /> 
+					<strong>2</strong>
+				</div>
+				<div>
+					<img id="h_1_on" src="images/led_on.png" alt="[*]" title="1" style="display: inline;" />
+					<img id="h_1_off" src="images/led_off.png" alt="[ ]" title="1" style="display: none;" /> 
+					<strong>1</strong>
+				</div>
+				<div style="margin-left: 8px"><strong>H</strong></div> 
+				</div>
+			</div>
+			<!-- colonne 2 : les minutes -->
+			<div class="ui-block-b" style="text-align: right;">
+				<div style="margin-right: 10%">
+				<div>&nbsp;</div>
+				<div>
+					<strong>32</strong>
+					<img id="mn_32_on" src="images/led_on.png" alt="[*]" title="32" style="display: inline;" />
+					<img id="mn_32_off" src="images/led_off.png" alt="[ ]" title="32" style="display: none;" />
+				</div>
+				<div>
+					<strong>16</strong> 
+					<img id="mn_16_on" src="images/led_on.png" alt="[*]" title="16" style="display: inline;" />
+					<img id="mn_16_off" src="images/led_off.png" alt="[ ]" title="16" style="display: none;" />
+				</div>
+				<div>
+					<strong>8</strong> 
+					<img id="mn_8_on" src="images/led_on.png" alt="[*]" title="8" style="display: inline;" />
+					<img id="mn_8_off" src="images/led_off.png" alt="[ ]" title="8" style="display: none;" />
+				</div>
+				<div>
+					<strong>4</strong> 
+					<img id="mn_4_on" src="images/led_on.png" alt="[*]" title="4" style="display: inline;" />
+					<img id="mn_4_off" src="images/led_off.png" alt="[ ]" title="4" style="display: none;" />
+				</div>
+				<div>
+					<strong>2</strong> 
+					<img id="mn_2_on" src="images/led_on.png" alt="[*]" title="2" style="display: inline;" />
+					<img id="mn_2_off" src="images/led_off.png" alt="[ ]" title="2" style="display: none;" />
+				</div>
+				<div>
+					<strong>1</strong> 
+					<img id="mn_1_on" src="images/led_on.png" alt="[*]" title="1" style="display: inline;" />
+					<img id="mn_1_off" src="images/led_off.png" alt="[ ]" title="1" style="display: none;" />
+					</script>
+				</div>
+				<div style="margin-right: 8px"><strong>M</strong></div> 
+				</div>
+			</div>
+		</div>	
+	</div>	
+</div>
+ 
+
+<!-- La Première Page : LA DATE -->
+<div data-role="page" id="date" data-theme="a" style="position: fixed; width:100%; height: 100%; top: 0; bottom: 0;">
+	<!-- header -->
+    <div data-role="header">
+		<!-- navbar -->
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#heure" data-direction="reverse">Time</a></li>
+				<li><a data-theme="b" href="#date">Date</a></li>
+				<li><a href="#about">About</a></li>
+			</ul>
+		</div>        
+    </div>
+    <!-- page -->
+    <div data-role="content">
+		<!-- page sur deux colonnes -->
+		<div class="ui-grid-a">
+			<!-- colonne 1 : le mois -->
+			<div class="ui-block-a">
+				<div style="margin-left: 10%">
+				<div>
+					<img id="am_on" src="images/ampm_on.png" alt="[*]" title="AM" style="display: inline;" /> 
+					<strong>AM</strong>
+				</div>
+				<div>
+					<img id="pm_on" src="images/ampm_on.png" alt="[*]" title="PM" style="display: inline;" /> 
+					<strong>PM</strong>
+				</div>
+				<div>&nbsp;</div>
+				<div>
+					<img id="m_8_on" src="images/led_on.png" alt="[*]" title="8" style="display: inline;" />
+					<img id="m_8_off" src="images/led_off.png" alt="[ ]" title="8" style="display: none;" /> 
+					<strong>8</strong>
+				</div>
+				<div>
+					<img id="m_4_on" src="images/led_on.png" alt="[*]" title="4" style="display: inline;" />
+					<img id="m_4_off" src="images/led_off.png" alt="[ ]" title="4" style="display: none;" /> 
+					<strong>4</strong>
+				</div>
+				<div>
+					<img id="m_2_on" src="images/led_on.png" alt="[*]" title="2" style="display: inline;" /> 
+					<img id="m_2_off" src="images/led_off.png" alt="[ ]" title="2" style="display: none;" /> 
+					<strong>2</strong>
+				</div>
+				<div>
+					<img id="m_1_on" src="images/led_on.png" alt="[*]" title="1" style="display: inline;" />
+					<img id="m_1_off" src="images/led_off.png" alt="[ ]" title="1" style="display: none;" /> 
+					<strong>1</strong>
+				</div>
+				<div style="margin-left: 8px"><strong>M</strong></div> 
+				</div>
+			</div>
+			<!-- colonne 2 : le jour -->
+			<div class="ui-block-b" style="text-align: right;">
+				<div style="margin-right: 10%">
+				<div>&nbsp;</div>
+				<div>
+					<strong>32</strong>
+					<img id="d_32_on" src="images/led_on.png" alt="[*]" title="32" style="display: inline;" />
+					<img id="d_32_off" src="images/led_off.png" alt="[ ]" title="32" style="display: none;" />
+				</div>
+				<div>
+					<strong>16</strong> 
+					<img id="d_16_on" src="images/led_on.png" alt="[*]" title="16" style="display: inline;" />
+					<img id="d_16_off" src="images/led_off.png" alt="[ ]" title="16" style="display: none;" />
+				</div>
+				<div>
+					<strong>8</strong> 
+					<img id="d_8_on" src="images/led_on.png" alt="[*]" title="8" style="display: inline;" />
+					<img id="d_8_off" src="images/led_off.png" alt="[ ]" title="8" style="display: none;" />
+				</div>
+				<div>
+					<strong>4</strong> 
+					<img id="d_4_on" src="images/led_on.png" alt="[*]" title="4" style="display: inline;" />
+					<img id="d_4_off" src="images/led_off.png" alt="[ ]" title="4" style="display: none;" />
+				</div>
+				<div>
+					<strong>2</strong> 
+					<img id="d_2_on" src="images/led_on.png" alt="[*]" title="2" style="display: inline;" />
+					<img id="d_2_off" src="images/led_off.png" alt="[ ]" title="2" style="display: none;" />
+				</div>
+				<div>
+					<strong>1</strong> 
+					<img id="d_1_on" src="images/led_on.png" alt="[*]" title="1" style="display: inline;" />
+					<img id="d_1_off" src="images/led_off.png" alt="[ ]" title="1" style="display: none;" />
+					</script>
+				</div>
+				<div style="margin-right: 8px"><strong>D</strong></div>
+				</div> 
+			</div>
+		</div>	
+	</div>	
+</div>
+
+<!-- La Troisième Page : A PROPOS -->
+<div data-role="page" id="about" data-theme="a" style="position: fixed; width:100%; height: 100%; top: 0; bottom: 0;">
+	<!-- header -->
+    <div data-role="header">
+		<!-- navbar -->
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#heure" data-direction="reverse">Time</a></li>
+				<li><a href="#date" data-direction="reverse">Date</a></li>
+				<li><a data-theme="b" href="#about">About</a></li>
+			</ul>
+		</div>        
+    </div>
+
+    <div data-role="content">
+		<div>
+			<img src="images/ico-about.png" style="float: left;" /><br/>
+			<strong>Binary Clock</strong><br/>
+			<strong>Version 1.0</strong><br/>
+			31/01/2012
+        </div>
+		<div style="float: none;">&nbsp;</div> 
+        <div style="margin-left: 10px; margin-top: 5px;">
+			<small>
+				<strong>Author :</strong> Philippe Bousquet<br/> 
+				<strong>Email :</strong> darken33@free.fr<br/>
+				<strong>Web :</strong> http://darken33.free.fr/<br/>
+				<strong>License :</strong> Gnu GPL v3	
+			</small>
+		</div>
+    </div>
+ </div>
+ 
+ <script type="text/javascript">
+ 	/**
+	 * Au lancement de l'application on met à jour la date et l'heure
+	 * et on l'appelle toutes les secondes
+	 */
+	 updateTime();
+	 setInterval("updateTime()",1000);
+</script>
+ 
+</body>
+</html>
