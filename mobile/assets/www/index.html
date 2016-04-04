@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>binaryClock v1.0</title>
+        <title>binaryClock v1.1</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./jquery.mobile-1.0.1.min.css" />
-        <script type="text/javascript" src="./jquery-1.7.1.min.js"></script>
-        <script type="text/javascript" src="./jquery.mobile-1.0.1.min.js"></script>
+	 	<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0.1.min.css" />
+		<link rel="stylesheet" href="index.css" /> 
+	    <script src="jquery.mobile/jquery-1.6.4.min"></script>
+		<script src="jquery.mobile/jquery.mobile-1.0.1.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="phonegap.0.9.6.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="index.js"></script>
     </head>
-<body style="overflow: hidden;">
+<body style="overflow: hidden;" onload="init();">
 
 <script type="text/javascript">
 	/** est on le matin */
@@ -144,6 +147,33 @@
 		return tstr;
 	}
 	
+	/**
+	 * vibrate - fait vibrer le téléphone
+	 */
+	var vibrate = function() {
+    	navigator.notification.vibrate(0);
+	};
+	
+	/**
+	 * onBackbutton - evenement sur le bouton retour : on quite
+	 */
+	function onBackbutton() {
+        navigator.app.exitApp();
+    }
+    
+	/**
+	 * onDeviceReady - mise en place des listeners
+	 */
+	 var onDeviceReady = function() {
+	    document.addEventListener("backbutton", onBackbutton, false);
+ 	};
+    
+	/**
+	 * init - intialisation mise en place du listener deviceready
+	 */
+	function init() {
+    	document.addEventListener("deviceready", onDeviceReady, true);
+	}
 </script> 
 
 <!-- La Première Page : L'HEURE -->
@@ -153,9 +183,9 @@
 		<!-- /navbar -->
 		<div data-role="navbar">
 			<ul>
-				<li><a data-theme="b" href="#heure">Time</a></li>
-				<li><a href="#date">Date</a></li>
-				<li><a href="#about">About</a></li>
+				<li><a data-theme="b" href="#heure" onclick="vibrate();">Time</a></li>
+				<li><a href="#date" onclick="vibrate();">Date</a></li>
+				<li><a href="#about" onclick="vibrate();">About</a></li>
 			</ul>
 		</div>        
     </div>
@@ -250,9 +280,9 @@
 		<!-- navbar -->
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#heure" data-direction="reverse">Time</a></li>
-				<li><a data-theme="b" href="#date">Date</a></li>
-				<li><a href="#about">About</a></li>
+				<li><a href="#heure" data-direction="reverse" onclick="vibrate();">Time</a></li>
+				<li><a data-theme="b" href="#date" onclick="vibrate();">Date</a></li>
+				<li><a href="#about" onclick="vibrate();">About</a></li>
 			</ul>
 		</div>        
     </div>
@@ -344,9 +374,9 @@
 		<!-- navbar -->
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#heure" data-direction="reverse">Time</a></li>
-				<li><a href="#date" data-direction="reverse">Date</a></li>
-				<li><a data-theme="b" href="#about">About</a></li>
+				<li><a href="#heure" data-direction="reverse" onclick="vibrate();">Time</a></li>
+				<li><a href="#date" data-direction="reverse" onclick="vibrate();">Date</a></li>
+				<li><a data-theme="b" href="#about" onclick="vibrate();">About</a></li>
 			</ul>
 		</div>        
     </div>
@@ -355,8 +385,8 @@
 		<div>
 			<img src="images/ico-about.png" style="float: left;" /><br/>
 			<strong>Binary Clock</strong><br/>
-			<strong>Version 1.0</strong><br/>
-			31/01/2012
+			<strong>Version 1.1</strong><br/>
+			15/02/2012
         </div>
 		<div style="float: none;">&nbsp;</div> 
         <div style="margin-left: 10px; margin-top: 5px;">
